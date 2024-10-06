@@ -8,7 +8,6 @@ const port = 3000
 //mongoose.connect('mongodb://localhost:27017/miapp')
 mongoose.connect('mongodb+srv://azkr:asdfghjkl1234@cluster11.yeqnb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster11')
 
-
 app.use(express.json())
 
 app.get('/animals', isAuthenticated, Animal.list)

@@ -23,10 +23,8 @@ const getAnimals = async () => {
 	const response = await fetch('/animals', {
 		headers: {
 			//Authorization: localStorage.getItem('jwt')
-			Authorization: `Bearer ${localStorage.getItem('jwt')}`
-
-		}  
-		
+			  Authorization: `Bearer ${localStorage.getItem('jwt')}`
+		}  		
 	})
 	const animals = await response.json()
 	const template = animal => `
@@ -34,7 +32,7 @@ const getAnimals = async () => {
 			${animal.name} ${animal.type} <button data-id="${animal._id}">Eliminar</button>
 		</li>
 	`
-
+	
 	const animalList = document.getElementById('animal-list')
 	animalList.innerHTML = animals.map(animal => template(animal)).join('')
 	animals.forEach(animal => {
@@ -118,12 +116,11 @@ const addRegisterListener = () => {
 		} else {
 			console.log(localStorage.getItem('jwt'));
 			localStorage.setItem('jwt', `Bearer ${responseData}`)
-			//localStorage.setItem('jwt', `Bearer $(responseData`)
 			animalsPage()
 		}
 	}
 }
-
+ 
 const gotoLoginListener = () => {}
 
 const registerPage = () => {
