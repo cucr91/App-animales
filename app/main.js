@@ -75,12 +75,12 @@ const animalsPage = () => {
 }
 
 const loadRegisterTemplate = () => {
-	`
+	const template = `
 		<h1>Registrarse</h1>
 		<form id="register-form">
 			<div>
 				<label>Correo</label>
-				<input name="Email" />
+				<input name="email" />
 			</div>
 			<div>
 				<label>Contraseña</label>
@@ -91,13 +91,15 @@ const loadRegisterTemplate = () => {
 		<a href="#" id="login"> Iniciar sesión </a>
 		<div id="error"> </div>
 	`
+	const body = document.getElementsByTagName('body')[0]
+	body.innerHTML = template
 }
-const addRegisterListener = () => {
+const addRegisterListener = () => {	
 	const registerForm = document.getElementById('register-form')
 	registerForm.onsubmit = async (e) => {
 		e.preventDefault()
-		const formData = new FormData(loginForm)
-		const data = Object.fromEntries(formData.entries)
+		const formData = new FormData(registerForm) 
+		const data = Object.fromEntries(formData.entries()) 
 
 		const response = await fetch('/register', {
 			method: 'POST',
@@ -137,12 +139,12 @@ const loginPage = () => {
 }
 
 const loadLoginTemplate = () => {
-	`
+	const template = `
 		<h1>Login</h1>
 		<form id="login-form">
 			<div>
 				<label>Correo</label>
-				<input name="Email" />
+				<input name="email" />
 			</div>
 			<div>
 				<label>Contraseña</label>
@@ -153,7 +155,6 @@ const loadLoginTemplate = () => {
 		<a href="#" id="register"> Registrarse </a>
 		<div id="error"> </div>
 	`
-
 	const body = document.getElementsByTagName('body')[0]
 	body.innerHTML = template
 }
@@ -171,8 +172,7 @@ const addLoginListener = () => {
 	loginForm.onsubmit = async (e) => {
 		e.preventDefault()
 		const formData = new FormData(loginForm)
-		const data = Object.fromEntries(formData.entries)
-
+		const data = Object.fromEntries(formData.entries()) 
 		const response = await fetch('/login', {
 			method: 'POST',
 			body: JSON.stringify(data),

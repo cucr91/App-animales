@@ -6,7 +6,6 @@ const User = require('./user.model')
 
 const validateJwt = expressjwt({ secret: process.env.SECRET, algorithms: ['HS256'] });
 
-
 const signToken = _id => jwt.sign({ _id }, process.env.SECRET)
 
 
