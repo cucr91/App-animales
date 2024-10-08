@@ -19,13 +19,13 @@ const loadInitialTemplate = () => {
 }
 
 const getAnimals = async () => {
-	console.log(localStorage.getItem('jwt'));
+	//console.log(localStorage.getItem('jwt'));
 	const response = await fetch('/animals', {
-		headers: {
-			//Authorization: localStorage.getItem('jwt')
-			  Authorization: `Bearer ${localStorage.getItem('jwt')}`
-		}  		
-	})
+		headers: { 
+			 // Authorization: localStorage.getItem('jwt') 
+				Authorization: `${localStorage.getItem('jwt')}` 
+			} 
+		})
 	const animals = await response.json()
 	const template = animal => `
 		<li>
@@ -110,7 +110,7 @@ const addRegisterListener = () => {
 		})
 		//const responseData = await response.text()
 		const responseData = await response.json();
-		localStorage.setItem('jwt', `Bearer ${responseData.token}`);
+		localStorage.setItem('jwt', `Bearer ${responseData}`);
 
 		if(response.status >= 300) {
 			const errorNode = document.getElementById('error')
