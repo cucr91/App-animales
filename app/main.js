@@ -22,8 +22,8 @@ const getAnimals = async () => {
 	//console.log(localStorage.getItem('jwt'));
 	const response = await fetch('/animals', {
 		headers: { 
-			 // Authorization: localStorage.getItem('jwt') 
-				Authorization: `${localStorage.getItem('jwt')}` 
+			 Authorization: localStorage.getItem('jwt') 
+			// 	Authorization: `${localStorage.getItem('jwt')}` 
 			} 
 		})
 	const animals = await response.json()
@@ -40,6 +40,9 @@ const getAnimals = async () => {
 		animalNode.onclick = async e => {
 			await fetch(`/animals/${animal._id}`, {
 				method: 'DELETE',
+				headers: {
+					Authorization: localStorage.getItem('jwt')
+				}
 			})
 			animalNode.parentNode.remove()
 			alert('Eliminado con éxito')
@@ -57,7 +60,8 @@ const addFormListener = () => {
 			method: 'POST',
 			body: JSON.stringify(data),
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization: localStorage.getItem('jwt')
 			}
 		})
 		animalForm.reset()
@@ -73,6 +77,21 @@ const animalsPage = () => {
 	addFormListener()
   	getAnimals()
 }
+const registerPage = () => {
+	console.log('pagina de registro')
+	loadRegisterTemplate()
+	addRegisterListener()
+  	gotoLoginListener()
+}
+
+const loginPage = () => {
+	loadLoginTemplate()
+	addLoginListener()
+	goToRegisterListener()
+}
+
+const addRegisterTemplate = () => {}
+
 
 const loadRegisterTemplate = () => {
 	const template = `
@@ -85,6 +104,11 @@ const loadRegisterTemplate = () => {
 			<div>
 				<label>Contraseña</label>
 				<input name="password" />
+			</div>
+			<div>
+				<label>
+      			  <input type="checkbox" id="myCheckbox"> Acepto los términos y condiciones
+    			</label>
 			</div>
 			<button type="submit">Enviar</button>
 		</form>
@@ -105,38 +129,31 @@ const addRegisterListener = () => {
 			method: 'POST',
 			body: JSON.stringify(data),
 			headers: {
-				'Content-type': 'application/json',
+				'Content-Type': 'application/json',
 			}
 		})
-		//const responseData = await response.text()
-		const responseData = await response.json();
-		localStorage.setItem('jwt', `Bearer ${responseData}`);
-
+		const responseData = await response.text()
+		//const responseData = await response.json();
+		//localStorage.setItem('jwt', `Bearer ${responseData}`);
 		if(response.status >= 300) {
 			const errorNode = document.getElementById('error')
 			errorNode.innerHTML = responseData
 		} else {
-			console.log(localStorage.getItem('jwt'));
+			//console.log(localStorage.getItem('jwt'));
 			localStorage.setItem('jwt', `Bearer ${responseData}`)
 			animalsPage()
+			//console.log(responseData)
 		}
 	}
 }
- 
-const gotoLoginListener = () => {}
-
-const registerPage = () => {
-	console.log('pagina de registro')
-	loadRegisterTemplate()
-	addRegisterListener()
-  	gotoLoginListener()
+const gotoLoginListener = () => {
+	const goToLogin = document.getElementById('login')
+	goToLogin.onclick = (e) => {
+		e.preventDefault()
+		loginPage()
+	}
 }
 
-const loginPage = () => {
-	loadLoginTemplate()
-	addLoginListener()
-	goToRegisterListener()
-}
 
 const loadLoginTemplate = () => {
 	const template = `
@@ -149,6 +166,11 @@ const loadLoginTemplate = () => {
 			<div>
 				<label>Contraseña</label>
 				<input name="password" />
+			</div>
+			<div>
+				<label>
+      			  <input type="checkbox" id="myCheckbox"> Acepto los términos y condiciones
+    			</label>
 			</div>
 			<button type="submit">Enviar</button>
 		</form>
@@ -173,11 +195,12 @@ const addLoginListener = () => {
 		e.preventDefault()
 		const formData = new FormData(loginForm)
 		const data = Object.fromEntries(formData.entries()) 
+
 		const response = await fetch('/login', {
 			method: 'POST',
 			body: JSON.stringify(data),
 			headers: {
-				'Content-type': 'application/json',
+				'Content-Type': 'application/json',
 			}
 		})
 		const responseData = await response.text()
@@ -185,10 +208,12 @@ const addLoginListener = () => {
 			const errorNode = document.getElementById('error')
 			errorNode.innerHTML = responseData
 		} else {
-			console.log(responseData)
+			localStorage.setItem('jwt', `Bearer ${responseData}`)
+			animalsPage()
 		}
 	}
 }
+
 window.onload = () => {
 	const isLoggedIn = checkLogin()
 	if(isLoggedIn) {
