@@ -46,6 +46,7 @@ const getAnimals = async () => {
 			})
 			animalNode.parentNode.remove()
 			alert('Eliminado con éxito')
+			getAnimals();
 		}
 	})
 }
@@ -92,7 +93,6 @@ const loginPage = () => {
 
 const addRegisterTemplate = () => {}
 
-
 const loadRegisterTemplate = () => {
 	const template = `
 		<h1>Registrarse</h1>
@@ -105,12 +105,7 @@ const loadRegisterTemplate = () => {
 				<label>Contraseña</label>
 				<input name="password" />
 			</div>
-			<div>
-				<label>
-      			  <input type="checkbox" id="myCheckbox"> Acepto los términos y condiciones
-    			</label>
-			</div>
-			<button type="submit">Enviar</button>
+			<button type="submit">Registrarse </button>
 		</form>
 		<a href="#" id="login"> Iniciar sesión </a>
 		<div id="error"> </div>
@@ -118,42 +113,14 @@ const loadRegisterTemplate = () => {
 	const body = document.getElementsByTagName('body')[0]
 	body.innerHTML = template
 }
-const addRegisterListener = () => {	
-	const registerForm = document.getElementById('register-form')
-	registerForm.onsubmit = async (e) => {
-		e.preventDefault()
-		const formData = new FormData(registerForm) 
-		const data = Object.fromEntries(formData.entries()) 
 
-		const response = await fetch('/register', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-Type': 'application/json',
-			}
-		})
-		const responseData = await response.text()
-		//const responseData = await response.json();
-		//localStorage.setItem('jwt', `Bearer ${responseData}`);
-		if(response.status >= 300) {
-			const errorNode = document.getElementById('error')
-			errorNode.innerHTML = responseData
-		} else {
-			//console.log(localStorage.getItem('jwt'));
-			localStorage.setItem('jwt', `Bearer ${responseData}`)
-			animalsPage()
-			//console.log(responseData)
-		}
-	}
-}
 const gotoLoginListener = () => {
-	const goToLogin = document.getElementById('login')
-	goToLogin.onclick = (e) => {
+	const gotoLogin = document.getElementById('login')
+	gotoLogin.onclick = (e) => {
 		e.preventDefault()
 		loginPage()
 	}
 }
-
 
 const loadLoginTemplate = () => {
 	const template = `
@@ -167,12 +134,7 @@ const loadLoginTemplate = () => {
 				<label>Contraseña</label>
 				<input name="password" />
 			</div>
-			<div>
-				<label>
-      			  <input type="checkbox" id="myCheckbox"> Acepto los términos y condiciones
-    			</label>
-			</div>
-			<button type="submit">Enviar</button>
+			<button type="submit">Iniciar</button>
 		</form>
 		<a href="#" id="register"> Registrarse </a>
 		<div id="error"> </div>
@@ -188,31 +150,33 @@ const goToRegisterListener = () => {
 		registerPage()
 	}
 }
+const authListener = action => () => {
+ const form = document.getElementById(`${action}-form`)
+form.onsubmit = async (e) => {
+	e.preventDefault()
+	const formData = new FormData(form)
+	const data = Object.fromEntries(formData.entries()) 
 
-const addLoginListener = () => {
-	const loginForm = document.getElementById('login-form')
-	loginForm.onsubmit = async (e) => {
-		e.preventDefault()
-		const formData = new FormData(loginForm)
-		const data = Object.fromEntries(formData.entries()) 
-
-		const response = await fetch('/login', {
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers: {
-				'Content-Type': 'application/json',
-			}
-		})
-		const responseData = await response.text()
-		if(response.status >= 300) {
-			const errorNode = document.getElementById('error')
-			errorNode.innerHTML = responseData
-		} else {
-			localStorage.setItem('jwt', `Bearer ${responseData}`)
-			animalsPage()
+	const response = await fetch(`/${action}`, {
+		method: 'POST',
+		body: JSON.stringify(data),
+		headers: {
+			'Content-Type': 'application/json',
 		}
+	})
+	const responseData = await response.text()
+	if(response.status >= 300) {
+		const errorNode = document.getElementById('error')
+		errorNode.innerHTML = responseData
+	} else {
+		localStorage.setItem('jwt', `Bearer ${responseData}`)
+		animalsPage()
 	}
 }
+}
+const addLoginListener = authListener('login')
+
+const addRegisterListener = authListener('register')
 
 window.onload = () => {
 	const isLoggedIn = checkLogin()
@@ -222,3 +186,4 @@ window.onload = () => {
 		loginPage()
 	}
 }
+
