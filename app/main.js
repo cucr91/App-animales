@@ -12,7 +12,9 @@ const loadInitialTemplate = () => {
 			</div>
 			<button type="submit">Enviar</button>
 		</form>
+		<div id=animales>
 		<ul id="animal-list"></ul>
+		</div>
 		<button id="logout-button">Cerrar sesión</button>
 	`
 	const body = document.getElementsByTagName('body')[0]
@@ -116,7 +118,9 @@ const loadRegisterTemplate = () => {
 			</div>
 			<button type="submit">Registrarse </button>
 		</form>
+		<div class="register-container">
 		<a href="#" id="login"> Iniciar sesión </a>
+		</div>
 		<div id="error"> </div>
 	`
 	const body = document.getElementsByTagName('body')[0]
@@ -133,7 +137,7 @@ const gotoLoginListener = () => {
 
 const loadLoginTemplate = () => {
 	const template = `
-		<h1>Login</h1>
+		<h1>Iniciar sesión</h1>
 		<form id="login-form">
 			<div>
 				<label>Correo</label>
@@ -145,7 +149,9 @@ const loadLoginTemplate = () => {
 			</div>
 			<button type="submit">Iniciar</button>
 		</form>
-		<a href="#" id="register"> Registrarse </a>
+		<div class="register-container">
+   			 <a href="#" id="register">Registrarse</a>
+		</div>
 		<div id="error"> </div>
 	`
 	const body = document.getElementsByTagName('body')[0]
