@@ -13,6 +13,7 @@ const loadInitialTemplate = () => {
 			<button type="submit">Enviar</button>
 		</form>
 		<ul id="animal-list"></ul>
+		<button id="logout-button">Cerrar sesión</button>
 	`
 	const body = document.getElementsByTagName('body')[0]
 	body.innerHTML = template
@@ -73,10 +74,18 @@ const addFormListener = () => {
 const checkLogin = () => 
 	localStorage.getItem('jwt')
 
+const logout = () => {
+	localStorage.removeItem('jwt'); // Elimina el token de sesión
+	loginPage(); // Redirige a la página de inicio de sesión
+}
+
 const animalsPage = () => {
 	loadInitialTemplate()
 	addFormListener()
   	getAnimals()
+
+	  const logoutButton = document.getElementById('logout-button');
+	  logoutButton.onclick = logout;
 }
 const registerPage = () => {
 	console.log('pagina de registro')
